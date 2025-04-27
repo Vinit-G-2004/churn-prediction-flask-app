@@ -26,6 +26,8 @@ def predict():
         feature2 = float(request.form['feature2'])
         feature3 = float(request.form['feature3'])
 
+        print(f"Received inputs: {feature1}, {feature2}, {feature3}")  # Logging inputs for debugging
+
         # Create a 2D array with the input features
         input_data = [[feature1, feature2, feature3]]
 
@@ -35,12 +37,15 @@ def predict():
         # Predict using the trained model
         prediction = model.predict(scaled_input)
 
+        # Log the prediction result
+        print(f"Prediction result: {prediction}")
+
         # Return the prediction result (you can modify this to display it on your HTML page)
         return render_template('result.html', prediction=prediction[0])
 
     except Exception as e:
         print(f"Error during prediction: {e}")
-        return "An error occurred during prediction. Please check your inputs."
+        return f"An error occurred during prediction: {e}"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
