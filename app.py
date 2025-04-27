@@ -20,21 +20,22 @@ def home():
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
-        feature1 = float(request.form.get('feature1'))  # Using get() to avoid KeyError
-        feature2 = float(request.form.get('feature2'))
-        feature3 = float(request.form.get('feature3'))
+        # Get features from the form
+        feature1 = float(request.form['feature1'])
+        feature2 = float(request.form['feature2'])
+        feature3 = float(request.form['feature3'])
 
-        # You can add additional checks to ensure features are correctly passed
-        # Example: If a feature is missing, handle it gracefully
-        if feature1 is None or feature2 is None or feature3 is None:
-            return "Missing required feature values", 400
+        # Create the feature array
+        features = [[feature1, feature2, feature3]]
+
+        # Predict using the model
+        prediction = model.predict(features)
         
-        # Process the features and make prediction (Your existing logic goes here)
-        # result = model.predict([feature1, feature2, feature3])
-        # return result
+        # You can return a prediction result in a template or JSON
+        return render_template('result.html', prediction=prediction[0])
 
     except Exception as e:
-        return f"An error occurred: {str(e)}", 500
+        return f"Error: {str(e)}"
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
