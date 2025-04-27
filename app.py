@@ -19,29 +19,22 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get input data from the form
-    features = [float(request.form['feature1']),
-                float(request.form['feature2']),
-                float(request.form['feature3']),
-                float(request.form['feature4']),
-                float(request.form['feature5']),
-                float(request.form['feature6']),
-                float(request.form['feature7'])]
-    
-    # Reshape the input data to match model's expected input format
-    features_array = np.array(features).reshape(1, -1)
+    try:
+        feature1 = float(request.form.get('feature1'))  # Using get() to avoid KeyError
+        feature2 = float(request.form.get('feature2'))
+        feature3 = float(request.form.get('feature3'))
 
-    # Scale the input data using the loaded scaler
-    scaled_data = scaler.transform(features_array)
+        # You can add additional checks to ensure features are correctly passed
+        # Example: If a feature is missing, handle it gracefully
+        if feature1 is None or feature2 is None or feature3 is None:
+            return "Missing required feature values", 400
+        
+        # Process the features and make prediction (Your existing logic goes here)
+        # result = model.predict([feature1, feature2, feature3])
+        # return result
 
-    # Make a prediction using the model
-    prediction = model.predict(scaled_data)
-    
-    # Convert the prediction into a readable result (e.g., 0 = No Churn, 1 = Churn)
-    result = 'Churn' if prediction[0] == 1 else 'No Churn'
-
-    # Render the result page with the prediction
-    return render_template('result.html', prediction=result)
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 500
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
