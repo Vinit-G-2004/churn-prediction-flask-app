@@ -19,20 +19,22 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    try:
-        # Get features from the form
-        feature1 = float(request.form['feature1'])
-        feature2 = float(request.form['feature2'])
-        feature3 = float(request.form['feature3'])
+    # Get input features from the form
+    feature1 = float(request.form['feature1'])
+    feature2 = float(request.form['feature2'])
+    feature3 = float(request.form['feature3'])
 
-        # Create the feature array
-        features = [[feature1, feature2, feature3]]
+    # Create a 2D array with the input features
+    input_data = [[feature1, feature2, feature3]]
 
-        # Predict using the model
-        prediction = model.predict(features)
-        
-        # You can return a prediction result in a template or JSON
-        return render_template('result.html', prediction=prediction[0])
+    # Apply scaling (if you used StandardScaler or any other scaler during training)
+    scaled_input = scaler.transform(input_data)
+
+    # Predict using the trained model
+    prediction = model.predict(scaled_input)
+
+    # Return the prediction result (you can modify this to display it on your HTML page)
+    return render_template('result.html', prediction=prediction[0])
 
     except Exception as e:
         return f"Error: {str(e)}"
