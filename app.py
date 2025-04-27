@@ -17,27 +17,30 @@ def home():
     # Serve the home page where the user will enter input data
     return render_template('index.html')
 
+# Define your prediction function
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get input features from the form
-    feature1 = float(request.form['feature1'])
-    feature2 = float(request.form['feature2'])
-    feature3 = float(request.form['feature3'])
+    try:
+        # Get input features from the form
+        feature1 = float(request.form['feature1'])
+        feature2 = float(request.form['feature2'])
+        feature3 = float(request.form['feature3'])
 
-    # Create a 2D array with the input features
-    input_data = [[feature1, feature2, feature3]]
+        # Create a 2D array with the input features
+        input_data = [[feature1, feature2, feature3]]
 
-    # Apply scaling (if you used StandardScaler or any other scaler during training)
-    scaled_input = scaler.transform(input_data)
+        # Apply scaling (if you used StandardScaler or any other scaler during training)
+        scaled_input = scaler.transform(input_data)
 
-    # Predict using the trained model
-    prediction = model.predict(scaled_input)
+        # Predict using the trained model
+        prediction = model.predict(scaled_input)
 
-    # Return the prediction result (you can modify this to display it on your HTML page)
-    return render_template('result.html', prediction=prediction[0])
+        # Return the prediction result (you can modify this to display it on your HTML page)
+        return render_template('result.html', prediction=prediction[0])
 
     except Exception as e:
-        return f"Error: {str(e)}"
+        print(f"Error during prediction: {e}")
+        return "An error occurred during prediction. Please check your inputs."
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
